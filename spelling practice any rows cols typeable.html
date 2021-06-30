@@ -1,0 +1,36 @@
+<head>
+<style type="text/css">
+table.myTable { border-collapse:collapse; font-family: "HelloDoodlePrint", Courier}
+table.myTable td, table.myTable th { border:1px solid black; }
+td.biggen {font-size: 22pt; }
+</style>
+<table class="myTable" width="100%" height="99%"><script>
+function num(){
+    return ""
+}
+rows = prompt("rows","12")
+cols = prompt("cols","3")
+function key1(e, d){
+    
+    if ( d.innerHTML.charAt(0) == "<" )
+	    d.innerHTML = String.fromCharCode(e.keyCode? e.keyCode : e.charCode).toLowerCase()
+	else if ( e.keyCode == 8 ){
+	    d.innerHTML = d.innerHTML.substring(0,d.innerHTML.length-1)
+		
+	}
+	else 
+        d.innerHTML += String.fromCharCode(e.keyCode? e.keyCode : e.charCode).toLowerCase()
+}
+
+t = 1
+for(row = 0; row < rows; row ++){
+    document.write("<tr>")
+    for(col = 0; col < cols; col ++){
+	    c = "<pre><font size='6'>" + num() +"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +  "</font></pre>"
+	    document.write("<td class=biggen id='d"+row+col+"' onkeyup='key1(event,d" +row+col+ ")' tabindex=" + (t++) + ">" + c + "</td>")
+	}
+	document.write("</tr>")
+}
+ 
+</script>
+</table>

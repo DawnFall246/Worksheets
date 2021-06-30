@@ -1,0 +1,56 @@
+<head>
+<style type="text/css"> 
+table.myTable { border-collapse:collapse; table-layout: fixed;font-family: "HelloDoodlePrint", Courier}
+table.myTable td, table.myTable th { border:1px solid black;padding:5px; }
+td { text-align: center; font-size: xx-large; background-color: white; }
+#balert {
+    width: 140px;
+    height:100px;
+    border: 1px solid Black;
+    text-align: left;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left:-70px;
+    margin-top:-50px;
+    background-color: white;
+}
+</style>
+<table class="myTable" width="99%" height="99%"><script>
+function num(){
+    return 1 + Math.floor(Math.random()*9)
+}
+
+function op(){
+    x = Math.random()
+    return x < .33 ? "+": (x < .66? "-":"x")
+}
+
+function randcolor(){
+    if (Math.random() < 0.3)
+	    return "black"
+	else if (Math.random() < 0.6)
+		return "#7FFFD4"
+	else
+		return "red"
+}
+
+rows = prompt("How many rows?","3")*1
+cols = prompt("How many cols?","10")*1
+for(row = 0; row < rows; row ++){
+    document.write("<tr>")
+    for(col = 0; col < cols; col ++){
+        n1 = num()
+        n2 = num()
+        opr = op()
+        if ( opr == "-" && n1 < n2 ){
+            t = n1; n1 = n2; n2 = t;
+        }
+	    c = "<pre><font size='8' color='" + randcolor() +"'>  " + n1 +"<BR><U> "+opr + n2 + "</U></font></pre>"
+	    document.write("<td><div id='d"+row+col+"'>" + c + "</div></td>")
+	}
+	document.write("</tr>")
+}
+//<font color='#7FFFD4' size=+3>"
+</script>
+</table>

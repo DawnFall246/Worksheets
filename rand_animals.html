@@ -1,0 +1,201 @@
+<head>
+<style type="text/css">
+table.myTable { border-collapse:collapse; table-layout: fixed;font-family: "HelloDoodlePrint", Courier}
+table.myTable td, table.myTable th { border:1px solid black;padding:5px; }
+td { text-align: center; font-size: xx-large; background-color: white; }
+#balert {
+    width: 140px;
+    height:100px;
+    border: 1px solid Black;
+    text-align: left;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left:-70px;
+    margin-top:-50px;
+    background-color: white;
+}
+</style>
+
+<script src="countries.js"> </script>
+<script src="animals.js"> </script>
+<script src="names.js"></script>
+<script>
+base = 0
+function rand(n){
+    return Math.floor(n*Math.random())
+}
+function randitem(a){
+    return a[Math.floor(a.length*Math.random())]
+}
+
+var words2 = ["ask", "blue", "cup", "dirt", "exit", "fruit", "give", "have", "island", "joke", "kangaroo", "like", "mine", "neck", "oak", "pink", "quick", "right", "salt", "tower", "uncle", "vixen", "winter", "xray", "yellow", "zoo"]
+var words3 = ["Antelope", "Bian Zao", "Crane", "Ding", "Elephant", "Frog", "Giant Panda", "Hundun", "Ibex", "Jade Palace", "Kung Fu", "Leopard", "Monkey", "Newt", "Oogway", "Po", "Quail", "Rhino", "Shifu", "Tigress", "Umbrellabird", "Viper", "Wolf", "XRay", "Yak", "Zoo"]
+
+var words5 = ["Adam", "Bob", "Cathy", "Diya", "Evan", "Franny", "Geetha", "Harold", "Ian", "Jake", "Keshav", "Liam", "Mary", "Nancy", "Owen", "Petey", "Quincy", "Ricky", "Sam", "Tim", "Ulf", "Vicky", "Will", "Xander", "Yasmin", "Zao"]
+var words6 = []
+for(i = 0 ; i < 26; i ++){
+    nword = words1[i]
+    mr = Math.random()
+    if ( mr < 0.2 )
+        nword = words2[i]
+    else if ( mr < 0.4 )
+        nword = words3[i]
+    else if ( mr < 0.6 )
+        nword = words4[i]
+	else if ( mr < 0.8 )
+	    nword = words5[i]
+    words6.push(nword)
+}
+
+function get_word(w){
+  if (w instanceof Array){
+      return get_word(randitem(w));
+  }
+  else {
+    return w;
+  }
+}
+
+wordchoices = [words1, words2, words3, words4, words5, words6]
+//words = randitem(wordchoices)
+words = words4
+for (wi = 0; wi < words.length; wi ++)
+    words[wi] = get_word(words[wi]);
+
+var values = []
+numrows = 5
+numcols = 5
+for (row = 0; row < numrows; row ++){
+    values[row] = []
+    for(col = 0; col < numcols; col ++)
+        values[row][col] = 0
+}
+
+for(num = 1; num <= numrows*numcols; num ++){
+    row = rand(numrows)
+	col = rand(numcols)
+	while ( values[row][col] != 0 ){
+		row = rand(numrows)
+		col = rand(numcols)
+	}
+	values[row][col] = num
+}
+/*for (row = 0; row < 5; row ++){
+    for(col = 0; col < 6; col ++)
+        document.write(values[row][col]+ " ")
+	document.write("<br>")
+}*/
+
+function playSound(soundfile) {
+ document.getElementById("dummy").innerHTML= "<audio src='"+soundfile+"' hidden='true' autoplay='true'  />";
+
+}
+current = 1
+last = numrows*numcols
+soundsel = "sounds/thunder.mp3"
+mistakes = 0
+
+function clearAll(){
+    for(n = 1; n <= numrows*numcols; n ++){
+	    document.getElementById("n"+n).innerHTML = "You made: " + mistakes + " mistakes"
+		document.getElementById("t"+n).style.backgroundColor = "transparent"
+		//document.getElementById("t"+n).style.color = "transparent"
+	}
+	var msg = new SpeechSynthesisUtterance("You made: " + mistakes + " mistakes");
+    window.speechSynthesis.speak(msg);
+	//playSound("sounds/yeahkeshav2.wav")
+}
+
+function myalert(s){
+    document.getElementById("atext").innerHTML = s
+    document.getElementById("balert").style.visibility = "visible"
+}
+
+last = ""
+
+function check(n){
+    if ( n == current || n == last){
+
+	    ahide()
+	    //playSound(soundsel)
+      //var msg = new SpeechSynthesisUtterance("Good, " + words[current-1]);
+	  var msg = new SpeechSynthesisUtterance(words[n-1].substr(0,1) + " is for " + words[n-1]);
+          window.speechSynthesis.speak(msg);
+
+		if ( last !=n ) current ++
+	    if ( n == last){
+		    clearAll();
+			return;
+		}
+
+		last = n
+		//document.getElementById("n"+n).innerHTML = "."
+		//document.getElementById("t"+n).style.backgroundColor = "transparent"
+		//document.getElementById("t"+n).style.color = "transparent"
+		//playSound(soundsel)
+    //var msg = new SpeechSynthesisUtterance("Good, " + words[current-1]);
+        //window.speechSynthesis.speak(msg);
+	}
+	else{
+        //playSound("no.wav")
+		mistakes ++
+	    //myalert("Look for " + String.fromCharCode(base+current).toLocaleString())
+		myalert("Look for " + words[current-1])
+		var msg = new SpeechSynthesisUtterance("No, try again. Find " + words[current-1]);
+        window.speechSynthesis.speak(msg);
+	}
+	document.title = "" + words[current-1]
+}
+
+function ahide(){
+    document.getElementById("balert").style.visibility = "hidden"
+}
+</script>
+</head>
+<script>
+backs = new Array()
+backs[0] = "pics/lightning.jpg"
+backs[1] = "pics/lionking.jpg"
+if ( Math.random() < .5 ){
+    sel = backs[0]
+	soundsel = "sounds/thunder.mp3"
+}
+else{
+    sel = backs[1]
+	soundsel = "sounds/Tiger.wav"
+}
+soundsel = "sounds/thunder.mp3"
+document.write('<body style="background-image:url(' + sel + ')">')
+
+</script>
+<body style="background-image:url(pics/lightning.jpg)">
+    <div id="main">
+<table class="myTable" width="99%" height="99%">
+<script>
+    base = 64
+    for(row = 0; row < numrows; row ++){
+	    r = "<tr>"
+		for(col = 0; col < numcols; col ++){
+			n = values[row][col]
+			//n1 = String.fromCharCode(n + base)
+			n1 = words[n-1]
+			if ( n != 1 && Math.random() >= .5 )
+				n1 = "<font color='#7FFFD4' size=+3>" + n1
+			else if ( n != 1 )
+				n1 = "<font color='red' size=+3>" + n1
+			else
+				n1 = "<font color='black' size=+3>" + n1
+
+			r += "<td " + "id='t" + n + "'" + "onclick='check("+n+")'><div id='n" + n + "'>" + n1 + "</div></td>"
+		}
+		r += "</tr>"
+		document.write(r)
+
+	}
+</script>
+</table>
+<span id="dummy"></span></div>
+    <div id="balert" style="font-size: xx-large; visibility: hidden">
+        <div id="atext">Text</div> <input type="button" value="OK" onclick="ahide()"> </div>
+</body>
